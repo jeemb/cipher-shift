@@ -50,6 +50,7 @@ function encrypt_form_submit($form, &$form_state) {
     $shift_value = $form_state['values']['shift_value'];
     $direction = $form_state['values']['direction'];
     $phrase = $form_state['values']['phrase'];
+    $shift_value = $shift_value % 26;
     $direction = strtolower($direction);
     $phrase = strtolower($phrase);
     $letters = str_split($phrase);
@@ -60,12 +61,12 @@ function encrypt_form_submit($form, &$form_state) {
       $shift_value = 26 - $shift_value;
     }
 
-    if ($shift_value > 26) {
-      $shift_value = $shift_value - 26;
-    }
+    // if ($shift_value > 26) {
+    //   $shift_value = $shift_value - 26;
+    // }
 
-    foreach ($letters as $index => $let) {
-      $result[$index] = chr(97 + (ord($let) - 97 + $shift_value));
+    foreach ($letters as $index => $letter) {
+      $result[$index] = chr(97 + (ord($letter) - 97 + $shift_value) % 26);
     }
 
     $encrypted = implode("", $result);
