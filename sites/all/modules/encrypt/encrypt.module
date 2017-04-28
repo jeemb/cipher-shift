@@ -56,9 +56,13 @@ function encrypt_form_submit($form, &$form_state) {
     $result = array();
     $encrypted;
 
-    // if ($direction === left) {
-    //   $distance = 26 - $distance;
-    // }
+    if ($direction === 'left') {
+      $shift_value = 26 - $shift_value;
+    }
+
+    if ($shift_value > 26) {
+      $shift_value = $shift_value - 26;
+    }
 
     foreach ($letters as $index => $let) {
       $result[$index] = chr(97 + (ord($let) - 97 + $shift_value));
