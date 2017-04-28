@@ -9,7 +9,7 @@ function encrypt_menu() {
         'page callback' => 'drupal_get_form',
         'page arguments' => array('encrypt_form'),
     );
-    $items['encrypt-success'] = array(
+    $items['encrypt_success'] = array(
         'title' => 'Success',
         'type' => MENU_CALLBACK,
         'access callback' => TRUE,
@@ -44,4 +44,32 @@ function encrypt_form() {
     );
 
     return $form;
+}
+
+function encrypt_form_submit($form, &$form_state) {
+    $shift_value = $form_state['values']['shift_value'];
+    $direction = $form_state['values']['direction'];
+    $phrase = $form_state['values']['phrase'];
+    $direction = strtolower($direction);
+    $phrase = strtolower($phrase);
+    $letters = str_split($phrase);
+    $result = array();
+
+    // if ($direction === left) {
+    //   $distance = 26 - $distance;
+    // }
+
+    // foreach ($letters as $index => $let) {
+    //   $result[$index] = chr(97 + (ord($let) - 97 + $shift_value));
+    // }
+
+    // return join("", $result);
+
+    $_SESSION['result'] = $phrase;
+    $form_state['redirect'] = 'encrypt_success';
+}
+
+function encrypt_success() {
+    $answer = $_SESSION['result'];
+    return "you encrypted a phrase! niceeeee";
 }
