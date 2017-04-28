@@ -1,0 +1,5 @@
+name = Encrypt
+description = Encrypts a phrase using the cipher shift method.
+package = Custom Modules
+core = 7.x
+files[] = encrypt.module
