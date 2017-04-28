@@ -40,7 +40,7 @@ function encrypt_form() {
 
     $form['submit'] = array(
         '#type' => 'submit',
-        '#value' => 'Encrypt it' // printed on button
+        '#value' => 'Encrypt it'
     );
 
     return $form;
@@ -54,22 +54,23 @@ function encrypt_form_submit($form, &$form_state) {
     $phrase = strtolower($phrase);
     $letters = str_split($phrase);
     $result = array();
+    $encrypted;
 
     // if ($direction === left) {
     //   $distance = 26 - $distance;
     // }
 
-    // foreach ($letters as $index => $let) {
-    //   $result[$index] = chr(97 + (ord($let) - 97 + $shift_value));
-    // }
+    foreach ($letters as $index => $let) {
+      $result[$index] = chr(97 + (ord($let) - 97 + $shift_value));
+    }
 
-    // return join("", $result);
+    $encrypted = implode("", $result);
 
-    $_SESSION['result'] = $phrase;
+    $_SESSION['encrypted'] = $encrypted;
     $form_state['redirect'] = 'encrypt_success';
 }
 
 function encrypt_success() {
-    $answer = $_SESSION['result'];
-    return "you encrypted a phrase! niceeeee";
+    $encrypted = $_SESSION['encrypted'];
+    return "you encrypted a phrase! $encrypted";
 }
