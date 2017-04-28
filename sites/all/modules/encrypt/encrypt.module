@@ -21,19 +21,18 @@ function encrypt_menu() {
 function encrypt_form() {
     $form = array();
     $form['shift_value'] = array(
-            '#title' => 'Shift Value',
-            '#type' => 'textfield',
-            '#description' => t('Enter shift value.'),
-            '#element_validate' => array('element_validate_integer_positive'),
-            '#required' => TRUE,
+        '#title' => 'Shift Value',
+        '#type' => 'textfield',
+        '#description' => t('Enter shift value.'),
+        '#element_validate' => array('element_validate_integer_positive'),
+        '#required' => TRUE,
     );
 
     $form['direction'] = array(
         '#title' => 'Direction',
         '#type' => 'textfield',
         '#description' => t('Enter direction of shift.'),
-        // '#element_validate' => array('element_direction'),
-        '#required' => TRUE,
+        '#element_validate' => array('element_validate_direction'),
     );
 
     $form['phrase'] = array(
@@ -52,8 +51,8 @@ function encrypt_form() {
     return $form;
 }
 
-function element_direction($element) {
-  if ($element['#value'] != 'right' || 'left') {
+function element_validate_direction($element) {
+  if ($element['#value'] != 'right' && $element['#value'] != 'left') {
     form_error($element, t('Direction must be specified as right or left only!'));
   }
 }
@@ -79,9 +78,6 @@ function encrypt_form_submit($form, &$form_state) {
       $shift_value = 26 - $shift_value;
     }
 
-    // if ($shift_value > 26) {
-    //   $shift_value = $shift_value - 26;
-    // }
     foreach ($letters as $i => $letter) {
       if (ctype_alpha($letter) === true) {
         $result[$i] = chr(97 + (ord($letter) - 97 + $shift_value) % 26);
