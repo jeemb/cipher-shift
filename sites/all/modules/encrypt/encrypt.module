@@ -24,18 +24,24 @@ function encrypt_form() {
             '#title' => 'Shift Value',
             '#type' => 'textfield',
             '#description' => t('Enter shift value.'),
+            '#element_validate' => array('element_validate_integer_positive'),
+            '#required' => TRUE,
     );
 
     $form['direction'] = array(
         '#title' => 'Direction',
         '#type' => 'textfield',
         '#description' => t('Enter direction of shift.'),
+        // '#element_validate' => array('element_direction'),
+        '#required' => TRUE,
     );
 
     $form['phrase'] = array(
         '#title' => 'Phrase',
         '#type' => 'textfield',
         '#description' => t('Enter phrase to be encrypted.'),
+        '#element_validate' => array('element_spaces_punctuation'),
+        '#required' => TRUE,
     );
 
     $form['submit'] = array(
@@ -44,6 +50,18 @@ function encrypt_form() {
     );
 
     return $form;
+}
+
+function element_direction($element) {
+  if ($element['#value'] != 'right' || 'left') {
+    form_error($element, t('Direction must be specified as right or left only!'));
+  }
+}
+
+function element_spaces_punctuation($element) {
+  if (ctype_alpha(str_replace(array(' ', '.', '!', '?'), '', $element['#value'])) === false ) {
+    form_error($element, t('Input can only contain letters, spaces, and punctuation!'));
+  }
 }
 
 function encrypt_form_submit($form, &$form_state) {
@@ -66,7 +84,12 @@ function encrypt_form_submit($form, &$form_state) {
     // }
 
     foreach ($letters as $index => $letter) {
-      $result[$index] = chr(97 + (ord($letter) - 97 + $shift_value) % 26);
+      if (ord($letter) !== 32 || 33 || 46 || 63 ) {
+        $result[$index] = chr(97 + (ord($letter) - 97 + $shift_value) % 26);
+      }
+      else if (ord($letter) === 32 || 33 || 46 || 63) {
+        $result[$index] = $letter;
+      }
     }
 
     $encrypted = implode("", $result);
